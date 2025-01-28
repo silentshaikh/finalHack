@@ -7,21 +7,73 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.stroke ul li a{
+  position: relative;
+}
+.stroke ul li a:after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 0%;
+  content: '.';
+  color: transparent;
+  background: #aaa;
+  height: 1px;
+}
+.stroke ul li a:hover:after {
+  width: 100%;
+}
+/* Animation for nav menu */
+
+
+.nav-transition.show {
+  opacity: 1;
+  transform: translateY(0); /* Slide down effect */
+  max-height: 1000px; /* Ensure the menu can expand to fit the content */
+}
+
+/* Flex changes for smaller screens */
+@media (max-width: 800px) {
+  .nav-transition {
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0; /* Collapsed by default */
+    overflow: hidden;
+  }
+  .nav-transition {
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Flexbox changes for mobile */
+@media (max-width: 800px) {
+  .nav-transition {
+    flex-direction: column;
+    gap: 12px; /* Or whatever suits you */
+    padding-top: 12px;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+
+.hero-sec{
+  background-image: url(../../public/images/shop-hero-1-product-slide-1.jpg);
+  /* height: 100vh; */
+  /* background-position: center center; */
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+@media only screen and (max-width:1000px){
+  .hero-sec{
+    background-position: top center;
+  }
+}
+@media only screen and (max-width:530px){
+  .hero-sec{
+    background-position: bottom ;
   }
 }
