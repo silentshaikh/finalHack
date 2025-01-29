@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // CORS middleware function
 function setCorsHeaders(response: NextResponse) {
-  response.headers.set("Access-Control-Allow-Origin", "https://fabrichaven.vercel.app/"); // Allow all origins (update as per your requirement)
+  response.headers.set("Access-Control-Allow-Origin", process.env.NEXT_PUBLIC_FABRIC as string); // Allow all origins (update as per your requirement)
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
 }
