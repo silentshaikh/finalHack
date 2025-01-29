@@ -135,7 +135,13 @@ function Context({children}:{children:ReactNode}) {
     //FETCH PRODUCT LIST
     const fetchProductList = async (api:string) => {
       try {
-        const fetchProd = await fetch(api,{cache:'force-cache'});
+        const fetchProd = await fetch(api,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache:'force-cache'
+        });
         const getProd:Product[] = await fetchProd.json();
         console.log(getProd);
         return getProd;
@@ -148,10 +154,10 @@ function Context({children}:{children:ReactNode}) {
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`https://fabrichaven.vercel.app/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`https://fabrichaven.vercel.app/api/clothex`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
 

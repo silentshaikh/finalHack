@@ -1,19 +1,34 @@
 import { client } from "@/sanity/lib/client";
 import { NextRequest, NextResponse } from "next/server";
 
+// CORS middleware function
+function setCorsHeaders(response: NextResponse) {
+  response.headers.set("Access-Control-Allow-Origin", "https://fabrichaven.vercel.app/"); // Allow all origins (update as per your requirement)
+  response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+}
+// function setCorsHeaders(response: NextResponse) {
+//   const allowedOrigins = ["http://localhost:3000", "https://fabrichaven.vercel.app"];
+//   const origin = response.headers.get("Origin");
+
+//   if (allowedOrigins.includes(origin as string)) {
+//     response.headers.set("Access-Control-Allow-Origin", origin as string);
+//   }
+//   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+//   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+// }
+
+
+// API handler
 export async function GET(req: NextRequest) {
   try {
     // Parse query parameters for pagination
     const url = new URL(req.url);
     const itemPage = parseInt(url.searchParams.get("page") || "1", 10); // Default to page 1
-    const itemLimit = parseInt(url.searchParams.get("limit") || "30", 30); // Default to 10 items per page
+    const itemLimit = parseInt(url.searchParams.get("limit") || "30", 10); // Default to 30 items per page
     const offset = (itemPage - 1) * itemLimit; // Calculate the starting point
 
-    // Fetch total count of products
-    // const totalItems = await client.fetch(`count(*[_type == "productlist"])`);
-    // const totalPages = Math.ceil(totalItems / itemLimit); // Total number of pages
-
-    // Fetch paginated products ordered by id
+    // Fetch paginated products from Sanity
     const clothBuck = await client.fetch(
       `*[_type == "productlist"] | order(id asc) [${offset}...${offset + itemLimit}]{
         productname,
@@ -33,15 +48,24 @@ export async function GET(req: NextRequest) {
       }`
     );
 
-    // Return paginated response
-    return NextResponse.json(
-   clothBuck,
-      { status: 200 }
-    );
+    // Create a response and set CORS headers
+    const response = NextResponse.json(clothBuck, { status: 200 });
+    setCorsHeaders(response);
+    return response;
   } catch (error) {
-    return NextResponse.json(
+    // Handle errors with CORS headers
+    const errorResponse = NextResponse.json(
       { error: `${error} : failed to fetch the products` },
       { status: 500 }
     );
+    setCorsHeaders(errorResponse);
+    return errorResponse;
   }
+}
+
+// Handle OPTIONS method for preflight requests
+export async function OPTIONS() {
+  const response = NextResponse.json(null, { status: 204 });
+  setCorsHeaders(response);
+  return response;
 }
