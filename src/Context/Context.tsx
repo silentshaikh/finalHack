@@ -223,10 +223,10 @@ const [colr,setColr] = useState<boolean>(false);
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`http://localhost:3000/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`http://localhost:3000/api/clothex`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
