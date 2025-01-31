@@ -1,9 +1,8 @@
-import React from "react";
-
+'use client';
 import { CiHeart } from "react-icons/ci";
-
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import ProductQuantity from "../ProductQuantity/ProductQuantity";
+import { useEcomHook } from "@/Context/Context";
 
 function ProductImgContent({
   color,
@@ -22,6 +21,7 @@ function ProductImgContent({
   size:string[];
   id:string;
 }) {
+  const {setProdColor,setProdSize,cartData,addToCart,colr,addWishList} = useEcomHook();
   return (
     <div>
       <h2 className="text-xl">{name}</h2>
@@ -46,11 +46,12 @@ function ProductImgContent({
       <div className="flex gap-2 pt-2">
         {color.map((e,i) => {
           return (
-            <button
+            <div
               key={i}
               style={{ backgroundColor: e }}
-              className={`cursor-pointer outline-none size-9 rounded-full max-[380px]:size-6`}
-            ></button>
+              onClick={() => setProdColor(e)}
+              className={`${e === cartData.productColor ? 'border-4 border-teal-200' :''} size-9 cursor-pointer rounded-full max-[380px]:size-6`}
+            ></div>
           );
         })}
       </div>
@@ -59,16 +60,16 @@ function ProductImgContent({
           return (
             <button
               key={i}
-              // style={{ backgroundColor: e }}
-              className={` flex items-center justify-center outline-none uppercase size-11 cursor-pointer border-2 border-dashed text-[#737373] font-bold hover:bg-slate-100 text-center text-xl max-[380px]:size-9`}
+              onClick={() => setProdSize(e)}
+              className={` ${e === cartData.productSize ? 'bg-slate-200' :''} flex items-center justify-center outline-none uppercase size-11 cursor-pointer border-2 border-dashed text-[#737373] font-bold hover:bg-slate-100 text-center text-xl max-[380px]:size-9`}
             >{e}</button>
           );
         })}
       </div>
       <div className="flex items-center gap-5 pt-9 max-[950px]:pt-7 max-[350px]:gap-3 ">
-        <button className="bg-[#23a6f0] py-3 px-4 rounded-md text-white text-sm font-bold outline-none">Add To Cart</button>
+        <button className="bg-[#23a6f0] py-3 px-4 rounded-md text-white text-sm font-bold outline-none" onClick={() => addToCart(id)}>Add To Cart</button>
         <div className="flex gap-3">
-        <CiHeart className="shadow size-10 p-2 rounded-full cursor-pointer max-[380px]:size-8" />
+        <CiHeart className={`shadow size-10 p-3 rounded-full text-lg ${colr ? 'text-teal-400 fondt-bold' :''} max-[380px]:size-8`} onClick={() => addWishList(id)} />
         {/* <BsCart className="shadow size-10 p-2 rounded-full max-[380px]:size-8" />
         <FaEye className="shadow size-10 p-2 rounded-full max-[380px]:size-8" /> */}
         </div>

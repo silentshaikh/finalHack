@@ -12,6 +12,7 @@ export interface ContextType{
     uniqueTypes:string[];
     selectValue:string;
     filtPopCategory:Product[];
+    cartData:InitialCartData;
     onHandleNav:() => void;
     paginationOperate:(e:string) => void;
     onHandleSelectBox:(e:ChangeEvent<HTMLSelectElement>) => void;
@@ -19,10 +20,33 @@ export interface ContextType{
     handleSearchValue: (value:string) => void;
     handleToggSearch: () => void;
     onHandleSearchForm: (e:FormEvent<HTMLFormElement>) => void;
+    cartOperate:() => void;
+    addWishList: (id:string) => void;
+    delWishList: (id:string) =>void;
+    onProductDetail: (id:string) => void;
     searchValue:string;
     searchTogg:boolean;
-    
+    emptyAlert:boolean;
+    // orderEmpty:boolean;
+    cartAlert:boolean;
+    colr:boolean;
+    onProdInc: (id:string) => void;
+    onProdDec: (id:string) => void;
+    setProdColor: (color:string) => void;
+    setProdSize: (size:string) => void;
+    addToCart: (id:string) => void;
+    addProdInc:(id:number) => void;
+    addProdDec:(id:number,quantity:number) => void;
+    cartDeleteItem: (id:number) =>void;
+    clearCart: () => void;
 };
+//Card Type for Cart Page
+export interface TypeForCartCard {
+    name: string;
+    category: string;
+    price: number;
+    img: string;
+  }
 export interface ClothList{
     id:number;
     name:string;
@@ -97,3 +121,39 @@ export interface ProductAction{
     payload:string|Product[];
 };
   
+
+export interface CartListType{
+    productname: string; 
+    productid: number; 
+    productsize: string; 
+    // producttype: string; 
+    // productavaiableornot: boolean | null; 
+    productcolor:string; 
+    price: number; 
+    productcategory: string; 
+    productimage: string;
+    productquantity:number;
+    sku:string;
+    currency:string
+    // productimagelist: ProductImage[]; 
+  };
+
+export interface InitialCartData{
+    cartList:Product[];
+    productColor:string;
+    productSize:string;
+    totalPrice:number;
+    totalQuantity:number
+    addCartProd:CartListType[]
+    shipping:number;
+    wishList:Product[];
+    toast:boolean
+};
+export interface CartAction{
+    type:string;
+    payload:string|number|Product[]|CartDec;
+};
+export interface CartDec{
+    id:number,
+    quantity:number;
+}

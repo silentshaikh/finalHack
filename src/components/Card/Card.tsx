@@ -1,15 +1,13 @@
 'use client';
+import { useEcomHook } from '@/Context/Context';
 import {  Product } from '@/utils/Type/type'
-import Image from 'next/image'
-import {  useRouter } from 'next/navigation';
-import React from 'react'
+import Image from 'next/image';
 
 function Card({clothlist}:{clothlist:Product}) {
+    const {onProductDetail} = useEcomHook();
     const {category,id,price,productname,productimg,productcolors} = clothlist;
-
-    const prodRoute = useRouter();
   return (
-    <div  className='flex flex-col items-center cursor-pointer' onClick={() => prodRoute.push(`/product/${id}`)}>
+    <div  className='flex flex-col items-center cursor-pointer' onClick={() => onProductDetail(id)}>
                     <Image
                     className='h-[300px]'
                         src={productimg}
