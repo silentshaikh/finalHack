@@ -4,7 +4,7 @@ import { useEcomHook } from '@/Context/Context'
 import { poppins, rubikBuble} from '@/utils/Helper/helper'
 // import ConfirmOrder from '../ConfirmOrder/ConfirmOrder'
 function CartAmount() {
-  const {cartData,} = useEcomHook();
+  const {cartData,onHandleCheckout} = useEcomHook();
   const {totalPrice,addCartProd} = cartData;
   return (
     <>
@@ -20,7 +20,7 @@ function CartAmount() {
         <h3>${totalPrice}</h3>
         </div>  
         <div>
-      <button className='bg-[#5EEAD4] text-white py-1 px-4 '>Checkout</button>
+      <button className='bg-[#5EEAD4] text-white py-1 px-4 ' onClick={onHandleCheckout}>Checkout</button>
           </div>    
       </div>
       </div>

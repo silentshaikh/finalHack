@@ -1,7 +1,8 @@
 'use client';
 import { useEcomHook } from '@/Context/Context';
 import {  Product } from '@/utils/Type/type'
-import Image from 'next/image';
+import Image from 'next/image'
+import React from 'react'
 
 function Card({clothlist}:{clothlist:Product}) {
     const {onProductDetail} = useEcomHook();

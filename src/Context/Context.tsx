@@ -1,9 +1,11 @@
 'use client';
 import { paginButton } from '@/utils/Helper/helper';
-import { CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction } from '@/utils/Type/type';
+import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck, ShipmentInpType, trackingObjType } from '@/utils/Type/type';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, createContext, FormEvent, ReactNode, useContext, useEffect, useReducer, useState } from 'react'
 import Cookies from "js-cookie";
+import getStripe from '@/utils/getStripe';
+import axios from 'axios';
 
 const EcomContext = createContext<ContextType|null>(null);
 const prodInitialData:InitialProdData = {
@@ -72,6 +74,7 @@ const CARTACTION = {
   RESET_COLOR_SIZE:'RESET_COLOR_SIZE',
   WISHLIST:'WISHLIST',
   DELETE_WISHLIST:'DELETE_WISHLIST',
+  HANDLE_CHECKOUT:'HANDLE_CHECKOUT',
 }
 
 
@@ -89,13 +92,30 @@ function Context({children}:{children:ReactNode}) {
      // add alert for empty cart selection
     const [emptyAlert,setEmptyAlert] = useState<boolean>(false);
 //add alert for order empty fields
-    // const [orderEmpty,setOrderEmpty] = useState<boolean>(false);
+    const [orderEmpty,setOrderEmpty] = useState<boolean>(false);
 //add alert when product add in the cart
     const [cartAlert,setCartAlert] = useState<boolean>(false);
      //ROUTER FOR NAVIGATION
      const navigRoute = useRouter();
      //ADD COLOR ON WISHLIST ICON
 const [colr,setColr] = useState<boolean>(false);
+//HANDLE SHIPMENT INPUT
+const [shipmentInp,setShipmentInp] = useState<Address>({
+  name: "",
+  phone: "",
+  addressLine1: "1600 Pennsylvania Avenue NW",
+  cityLocality: "Washington",
+  stateProvince: "DC",
+  postalCode: "20500",
+  countryCode: "US",
+  addressResidentialIndicator: "no",
+
+});
+
+const [rates, setRates] = useState<Rate[]>([]);
+  const [rateId, setRateId] = useState<string | null>(null);
+  const [labelPdf, setLabelPdf] = useState<string | null>(null);
+  const [trackingObj, setTrackingObj] = useState<trackingObjType | null>(null);
      //FOR PERFORM ADD TO CART
     //  const { addItem, cartDetails, incrementItem } = useShoppingCart();
     //TOGGLE NAVBAR
@@ -103,7 +123,7 @@ const [colr,setColr] = useState<boolean>(false);
         setNavTogg((prev) => !prev);
     };
      //destructuring the Reducer Cart Action
-     const {CARTSETLIST,ADDCOLOR,ADDSIZE,DECPRODUCTQUAN,INCPRODUCTQUAN,ADDTOCART,INC_ON_CART_PRODUCT,DEC_ON_CART_PRODUCT,RESET_COLOR_SIZE,WISHLIST,CLEAR_CART,DELETE_ITEM,DELETE_WISHLIST} = CARTACTION;
+     const {CARTSETLIST,ADDCOLOR,ADDSIZE,DECPRODUCTQUAN,INCPRODUCTQUAN,ADDTOCART,INC_ON_CART_PRODUCT,DEC_ON_CART_PRODUCT,ORDER_DONE,RESET_COLOR_SIZE,WISHLIST,CLEAR_CART,DELETE_ITEM,DELETE_WISHLIST,HANDLE_CHECKOUT} = CARTACTION;
       //HANDLE SEARCH BAR
       const handleSearchValue = (value:string) => {
         setSearchValue(value);
@@ -223,10 +243,10 @@ const [colr,setColr] = useState<boolean>(false);
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`http://localhost:3000/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`http://localhost:3000/api/clothex`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
@@ -235,7 +255,7 @@ const [colr,setColr] = useState<boolean>(false);
  };
  //CALL THE FUNCTION
  callFetchFunc();  
-    },[page,BACKUP,limit,LOADPRODUCT,CARTSETLIST]);
+    },[page,BACKUP,limit,LOADPRODUCT]);
       //DESTRUCTURE THE PAGINATION BUTTON VALUE
   const {first,one,next,three,two} = paginButton;
   // PERFORM PAGINATION
@@ -319,24 +339,160 @@ const [colr,setColr] = useState<boolean>(false);
     const clearCart = () => {
       cartDispatch({type:CLEAR_CART,payload:''})
     }
+       //  Add Wishlist
+       const addWishList = (id:string) => {
+        cartDispatch({type:WISHLIST,payload:id});
+        const findProd = productList.find((e) => e.id === id);
+        if(findProd){
+          setColr(true);
+        }
+      }
+    
+      //Delete Wishlist
+      const delWishList = (id:string) => {
+        cartDispatch({type:DELETE_WISHLIST,payload:id});
+        const findProd = productList.find((e) => e.id === id);
+        if(findProd){
+          setColr(false);
+        }
+      }
 
-     //Add Wishlist
-  const addWishList = (id:string) => {
-    cartDispatch({type:WISHLIST,payload:id});
-    const findProd = productList.find((e) => e.id === id);
-    if(findProd){
-      setColr(true);
-    }
-  }
+    //HANDLE CHECKOUT
+    const onHandleCheckout = async () => {
+      if (!cartData || cartData.addCartProd.length === 0) {
+        alert("Cart is Empty");
+        return;
+      }
+    
+      try {
+        const { addCartProd } = cartData;
+        const loadStripe = await getStripe();
+    
+        console.log("⏳ Sending Checkout Request...", addCartProd);
+    
+        const checkResponse = await fetch("/api/stripe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(addCartProd ), // ✅ Corrected JSON structure
+        });
+    
+        const responseData = await checkResponse.json();
+        console.log("✅ Checkout API Response:", responseData);
+    
+        if (!checkResponse.ok) {
+          console.error("❌ Checkout API Error:", responseData.error || "Unknown Error");
+          alert(`Checkout Failed: ${responseData.error || "Try again!"}`);
+          return;
+        }
+    
+        if (!responseData.sessionId) {
+          alert("Invalid response from checkout session. Please try again.");
+          return;
+        }
+    
+        console.log("🔄 Redirecting to Stripe Checkout...");
+        // setTimeout(() => {
+          // }, 3000);
+          cartDispatch({type:HANDLE_CHECKOUT,payload:''});
+          await loadStripe?.redirectToCheckout({ sessionId: responseData.sessionId });
+    
+      } catch (error) {
+        console.error("❌ Error in Checkout:", error);
+        alert("Something went wrong during checkout. Please try again.");
+      }
+    };
 
-  //Delete Wishlist
-  const delWishList = (id:string) => {
-    cartDispatch({type:DELETE_WISHLIST,payload:id});
-    const findProd = productList.find((e) => e.id === id);
-    if(findProd){
-      setColr(false);
-    }
-  }
+    //HANDLE SHIPMENT
+    // const onHandleShipment = async  () => {
+    //   const shipResponse = await fetch(`/api/get-rates`,{
+    //     method:'POST',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+
+    //   })
+    // }
+
+    const onHandleShipmentInp = (e:ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setShipmentInp((prev: Address) => ({ ...prev, [name]: value }));
+  };
+    //Handle Shipment Form
+  const onHandleShipmentForm = async  (e:FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+  
+      const {addressLine1,cityLocality,countryCode,name,phone,postalCode,stateProvince} = shipmentInp;
+      //Regex For Input Fields
+      // const emailRegex = /^[a-zA-Z0-9\_\.\%\+\-]+\@[a-zA-Z0-9\.\-]+\.[a-z]{2,7}$/;
+      // const matchEmail  = email.match(emailRegex); 
+      const phoneNumRegex = /^[0-9]{11}$/;
+      const matchPhoneNum = phone.match(phoneNumRegex);
+      const postalCodeNumRegex = /^[0-9]{5}$/;
+      const matchPostalCodeNum = postalCode.match(postalCodeNumRegex);
+      
+      const newInpValidCheck: ShipmentInpCheck = {
+        phoneCheck: matchPhoneNum,
+        firstnameCheck: name.length >= 3 && name.length <= 11,
+        addressCheck: addressLine1.length >= 10 && addressLine1.length <= 30,
+        cityCheck: cityLocality.length >= 4 && cityLocality.length <= 20,
+        countryCheck: countryCode.length >= 1 && countryCode.length <= 5,
+        stateCheck: stateProvince.length >= 2 && stateProvince.length <= 20,
+        postalcodeCheck: matchPostalCodeNum,
+
+      };
+      const {addressCheck,cityCheck,countryCheck,firstnameCheck,phoneCheck,postalcodeCheck,stateCheck} = newInpValidCheck;
+      if(!addressCheck || !cityCheck || !countryCheck  || !firstnameCheck  || !phoneCheck || !postalcodeCheck || !stateCheck){
+        alert(`Please complete all required fields before proceeding to checkout.`)
+      }
+      else{
+        alert(`Thank you for your purchase! Your payment was successful. A confirmation email has been sent to  .`);
+        setRates([]);
+        try {
+          const shipResponse = await axios.post("/api/get-rates", {
+            shipmentInp,
+            packages: [
+                   { weight: { value: 5, unit: "ounce" }, dimensions:{ height: 3, width: 15, length: 10, unit: "inch" } },
+                 ],
+          });
+          // const shipResponse = await fetch('/api/get-rates',{
+          //   method:'POST',
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body:JSON.stringify({
+          //       shipmentInp,
+          //       packages: [
+          //         { weight: { value: 5, unit: "ounce" }, dimensions: { height: 3, width: 15, length: 10, unit: "inch" } },
+          //       ],
+          //   })
+          // })
+          // setRates(shipResponse.)
+          // const dataShip = await shipResponse.json();
+          console.log(shipResponse.data)
+          // setRates(shipResponse.data.shipmentDetails.rateResponse.rates);
+          // console.log(shipResponse.data.shipmentDetails.rateResponse.rates)
+        } catch (error) {
+          console.error('Error in Fetching Rating')
+        }
+        setShipmentInp({
+        addressLine1:'',
+        cityLocality:'',
+        addressResidentialIndicator:'no',
+        countryCode:'',
+        name:'',
+        phone:"",
+        postalCode:'',
+        stateProvince:'',
+        });
+       
+        // cartDispatch({type:CHECKOUT_DONE,payload:''});
+      }
+  };  
+    
+
+ 
 
   //for handle empty alert
 useEffect(() => {
@@ -355,7 +511,9 @@ useEffect(() => {
   //HANDLE CART
   const [cartData,cartDispatch] = useReducer(cartReducer,cartInitialData);
   useEffect(() => {
-    CartToCookie(cartData.addCartProd);
+    // setTimeout(() => {
+      CartToCookie(cartData.addCartProd);
+    // }, 1000);
   },[cartData.addCartProd]);
 
   //HANDLE WISH LIST
@@ -566,6 +724,10 @@ useEffect(() => {
          });
          return {...state, wishList:deleteWish};
 
+         case HANDLE_CHECKOUT:
+          return {...state,addCartProd:[],totalPrice:0,totalQuantity:0}  
+         
+
        default:
          return state
      }
@@ -580,7 +742,7 @@ useEffect(() => {
   const filtPopCategory = popularProd.filter((e) => e.id !== '18');
   console.log(filtPopCategory)
   return (
-    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onProductDetail}}>{children}</EcomContext.Provider>
+    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,orderEmpty,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp}}>{children}</EcomContext.Provider>
   )
 }
 

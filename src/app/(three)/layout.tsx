@@ -35,10 +35,10 @@ export default function RootLayout({
         {/* <CartProvider> */}
 
         <Context>
-        <TopBar/>
-        <Header/>
+        {/* <TopBar/> */}
+        {/* <Header/> */}
         {children}
-        <Footer/>
+        {/* <Footer/> */}
         </Context>
         {/* </CartProvider> */}
       </body>

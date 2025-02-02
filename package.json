@@ -12,7 +12,9 @@
   "dependencies": {
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.71.2",
+    "@stripe/stripe-js": "^5.6.0",
     "axios": "^1.7.9",
+    "canvas-confetti": "^1.9.3",
     "dotenv": "^16.4.7",
     "js-cookie": "^3.0.5",
     "next": "^14.2.15",
@@ -21,10 +23,12 @@
     "react-dom": "^18",
     "react-icons": "^5.4.0",
     "sanity": "^3.71.2",
-    "styled-components": "^6.1.14",
-    "use-shopping-cart": "^3.2.0"
+    "shipengine": "^1.0.7",
+    "stripe": "^17.6.0",
+    "styled-components": "^6.1.14"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
