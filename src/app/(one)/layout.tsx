@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import TopBar from "@/components/TopBar/TopBar";
 import Context from "@/Context/Context";
 import Footer from "@/components/Footer/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
 // import CartProvider from "@/Context/CartProvider/CartProvider";
 
 const geistSans = localFont({
@@ -34,6 +35,7 @@ export default function RootLayout({
       >
         {/* <CartProvider> */}
 
+        <ClerkProvider>
         <Context>
         <TopBar/>
         <Header/>
@@ -41,6 +43,7 @@ export default function RootLayout({
         <Footer/>
         </Context>
         {/* </CartProvider> */}
+        </ClerkProvider>
       </body>
     </html>
   );

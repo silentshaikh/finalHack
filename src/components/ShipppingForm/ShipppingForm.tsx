@@ -6,7 +6,7 @@ import ShippingInput from '../ShippingInput/ShippingInput';
 import { poppins } from '@/utils/Helper/helper';
 
 function ShipppingForm() {
-    const {shipmentInp,onHandleShipmentForm} = useEcomHook()
+    const {shipmentInp,onHandleShipmentForm,loading} = useEcomHook()
     return(
         <form action='' className={`${poppins.className} flex flex-col`} onSubmit={(e) => onHandleShipmentForm(e)}>
       <ShippingLabelInp labelValue="contact info"/>
@@ -24,7 +24,7 @@ function ShipppingForm() {
        <ShippingInput place="City" name="cityLocality" value={shipmentInp.cityLocality}/> 
        <ShippingInput place="Postal Code" name="postalCode" value={shipmentInp.postalCode}/> 
       </div>
-      <button className="bg-[#D9D9D9] py-2 w-52">Shipping</button>
+      <button className="bg-sky-200 text-slate-100 py-2 w-52 hover:bg-sky-300" disabled={loading}>{loading ? 'Plz Wait...' :'Shipping Rates'}</button>
     </form>
     )
 }

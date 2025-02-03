@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import TopBar from "@/components/TopBar/TopBar";
 import Context from "@/Context/Context";
 import Footer from "@/components/Footer/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
 // import CartProvider from "@/Context/CartProvider/CartProvider";
 
 const geistSans = localFont({
@@ -33,6 +34,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* <CartProvider> */}
+<ClerkProvider>
 
         <Context>
         {/* <TopBar/> */}
@@ -40,6 +42,7 @@ export default function RootLayout({
         {children}
         {/* <Footer/> */}
         </Context>
+</ClerkProvider>
         {/* </CartProvider> */}
       </body>
     </html>

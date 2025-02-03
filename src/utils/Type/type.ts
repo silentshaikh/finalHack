@@ -30,6 +30,16 @@ export interface ContextType{
     cartAlert:boolean;
     colr:boolean;
     shipmentInp:Address;
+    rateList:Rate[];
+    rateId:string|null;
+    labelPdf:string|null;
+    loading:boolean;
+    shipError:string;
+    trackingObj:trackingObjType|null;
+    labelId:string;
+    trackingData:TrackingData|null;
+    trackError:string;
+    signupAlert:boolean;
     onProdInc: (id:string) => void;
     onProdDec: (id:string) => void;
     setProdColor: (color:string) => void;
@@ -43,6 +53,10 @@ export interface ContextType{
     onProductDetail:(id:string) =>void;
     onHandleShipmentForm :(e:FormEvent<HTMLFormElement>) => void;
     onHandleShipmentInp : (e:ChangeEvent<HTMLInputElement>) => void;
+    handleRate:(id:string|null) =>void;
+    onCreatingLabel:() =>void;
+    onHandleTrack: (e:string) => void;
+    onSubmitTracking: (e:FormEvent<HTMLFormElement>) => void;
 };
 //Card Type for Cart Page
 export interface TypeForCartCard {

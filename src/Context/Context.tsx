@@ -1,11 +1,13 @@
 'use client';
 import { paginButton } from '@/utils/Helper/helper';
-import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck, ShipmentInpType, trackingObjType } from '@/utils/Type/type';
-import { useRouter } from 'next/navigation';
-import React, { ChangeEvent, createContext, FormEvent, ReactNode, useContext, useEffect, useReducer, useState } from 'react'
+import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck, ShipmentInpType, TrackingData, trackingObjType } from '@/utils/Type/type';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { ChangeEvent, createContext, FormEvent, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import Cookies from "js-cookie";
 import getStripe from '@/utils/getStripe';
 import axios from 'axios';
+import { useUser } from '@clerk/nextjs';
+import { toast } from 'react-toastify';
 
 const EcomContext = createContext<ContextType|null>(null);
 const prodInitialData:InitialProdData = {
@@ -112,12 +114,26 @@ const [shipmentInp,setShipmentInp] = useState<Address>({
 
 });
 
-const [rates, setRates] = useState<Rate[]>([]);
+const [rateList, setRatesList] = useState<Rate[]>([]);
   const [rateId, setRateId] = useState<string | null>(null);
   const [labelPdf, setLabelPdf] = useState<string | null>(null);
   const [trackingObj, setTrackingObj] = useState<trackingObjType | null>(null);
-     //FOR PERFORM ADD TO CART
-    //  const { addItem, cartDetails, incrementItem } = useShoppingCart();
+  const [loading, setLoading] = useState(false);
+  const [shipError, setShipError] = useState<string>('');
+  //tracking on shipment
+  const [labelId, setLabelId] = useState("");
+  const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
+  const [trackError, setTrackError] = useState<string>('');
+  const serchParams = useSearchParams();
+  const queryId = serchParams.get('labelid') as string;
+  const trackRoute = useRouter();
+
+  //CHECK USER LOGGED-IN OR NOT
+  const {isSignedIn,user} = useUser();
+  const userEmail = user?.primaryEmailAddress?.emailAddress || '';
+  const userName = user?.fullName || '';
+
+  const [signupAlert,setSignUpAlert] = useState(false);
     //TOGGLE NAVBAR
     const onHandleNav = () => {
         setNavTogg((prev) => !prev);
@@ -360,12 +376,21 @@ const [rates, setRates] = useState<Rate[]>([]);
     //HANDLE CHECKOUT
     const onHandleCheckout = async () => {
       if (!cartData || cartData.addCartProd.length === 0) {
-        alert("Cart is Empty");
+        toast("Cart is Empty");
         return;
       }
-    
+      if (!isSignedIn) {
+        // alert("You must be logged in to place an order!"); 
+        // setSignUpAlert(true)
+        toast("You must be logged in for Checkout!")
+        // router.push("/sign-in"); // Redirect to login page
+      
+        return;
+      }
+      setSignUpAlert(false);
+    alert(userEmail);
       try {
-        const { addCartProd } = cartData;
+        const { addCartProd,totalPrice } = cartData;
         const loadStripe = await getStripe();
     
         console.log("⏳ Sending Checkout Request...", addCartProd);
@@ -390,36 +415,43 @@ const [rates, setRates] = useState<Rate[]>([]);
         if (!responseData.sessionId) {
           alert("Invalid response from checkout session. Please try again.");
           return;
-        }
-    
-        console.log("🔄 Redirecting to Stripe Checkout...");
-        // setTimeout(() => {
-          // }, 3000);
-          cartDispatch({type:HANDLE_CHECKOUT,payload:''});
-          await loadStripe?.redirectToCheckout({ sessionId: responseData.sessionId });
+        }else{
+
+        // }
+
+        //POST REQUEST TO SEND EMAIL TO THE USER
+        // if(responseData.sessionId){
+          const userEmailResp = await fetch('/api/send-email',{
+            method:'POST',
+            headers:{
+              "Content-Type":'application/json'
+            },
+            body:JSON.stringify({
+              userEmail,
+              userName,
+              addCartProd,
+              totalPrice,
+            })
+          });
+          if(!userEmailResp){
+            throw new Error('Failed To send Email to User')
+          }
+            
+            console.log("🔄 Redirecting to Stripe Checkout...");
+              await loadStripe?.redirectToCheckout({ sessionId: responseData.sessionId });
+            }
     
       } catch (error) {
         console.error("❌ Error in Checkout:", error);
         alert("Something went wrong during checkout. Please try again.");
       }
     };
-
-    //HANDLE SHIPMENT
-    // const onHandleShipment = async  () => {
-    //   const shipResponse = await fetch(`/api/get-rates`,{
-    //     method:'POST',
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-
-    //   })
-    // }
-
+    
+    //Handle Shipment Form
     const onHandleShipmentInp = (e:ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setShipmentInp((prev: Address) => ({ ...prev, [name]: value }));
   };
-    //Handle Shipment Form
   const onHandleShipmentForm = async  (e:FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
@@ -444,11 +476,13 @@ const [rates, setRates] = useState<Rate[]>([]);
       };
       const {addressCheck,cityCheck,countryCheck,firstnameCheck,phoneCheck,postalcodeCheck,stateCheck} = newInpValidCheck;
       if(!addressCheck || !cityCheck || !countryCheck  || !firstnameCheck  || !phoneCheck || !postalcodeCheck || !stateCheck){
-        alert(`Please complete all required fields before proceeding to checkout.`)
+        toast(`Please complete all required fields before proceeding to checkout.`)
       }
       else{
-        alert(`Thank you for your purchase! Your payment was successful. A confirmation email has been sent to  .`);
-        setRates([]);
+        toast(`Thank you for your purchase! Your payment was successful. A confirmation email has been sent to  .`);
+        setLoading(true);
+      setShipError('');
+        setRatesList([]);
         try {
           const shipResponse = await axios.post("/api/get-rates", {
             shipmentInp,
@@ -456,25 +490,14 @@ const [rates, setRates] = useState<Rate[]>([]);
                    { weight: { value: 5, unit: "ounce" }, dimensions:{ height: 3, width: 15, length: 10, unit: "inch" } },
                  ],
           });
-          // const shipResponse = await fetch('/api/get-rates',{
-          //   method:'POST',
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body:JSON.stringify({
-          //       shipmentInp,
-          //       packages: [
-          //         { weight: { value: 5, unit: "ounce" }, dimensions: { height: 3, width: 15, length: 10, unit: "inch" } },
-          //       ],
-          //   })
-          // })
-          // setRates(shipResponse.)
-          // const dataShip = await shipResponse.json();
+        
           console.log(shipResponse.data)
-          // setRates(shipResponse.data.shipmentDetails.rateResponse.rates);
-          // console.log(shipResponse.data.shipmentDetails.rateResponse.rates)
+          setRatesList(shipResponse.data.shipmentDetail.rateResponse.rates);
         } catch (error) {
           console.error('Error in Fetching Rating')
+          setShipError('Error when Fetching the Rate List')
+        }finally{
+          setLoading(false)
         }
         setShipmentInp({
         addressLine1:'',
@@ -486,10 +509,81 @@ const [rates, setRates] = useState<Rate[]>([]);
         postalCode:'',
         stateProvince:'',
         });
-       
-        // cartDispatch({type:CHECKOUT_DONE,payload:''});
       }
   };  
+  //HANDLE SHIPPING RATE
+  const handleRate = (id:string|null) => {
+    setRateId(id)
+  };
+  //CREATING SHIPPING LABEL
+  const onCreatingLabel = async () => {
+    if(!rateId){
+      alert('Select a Rate to create a Label')
+      return;
+    };
+
+    setLoading(true);
+    setShipError('');
+
+    try {
+      const labelResponse = await axios.post('/api/label',{rateId})
+      const responseData = labelResponse.data;
+      setLabelPdf(responseData.labelDownload.href);
+      setTrackingObj({
+        trackingNumber: responseData.trackingNumber,
+        labelId: responseData.labelId,
+        carrierCode: responseData.carrierCode,
+      });
+      console.log(responseData)
+    } catch (error) {
+      console.error(error);
+      setShipError('Here are some issue to create a label. Please try later.')
+    }finally {
+      setLoading(false);
+    }
+  }
+  //HANDLING TRACKING
+  const handleTracking = useCallback(
+    async (labelid:string) => {
+     if(!labelid){
+      setTrackError('Label ID is Necessary');
+      return;
+     }
+      setLoading(true);
+      setTrackError('');
+      try {
+        trackRoute.replace(`/tracking?labelId=${labelid}`)
+        const trackResponse = await axios.get(`/api/tracking/${labelid}`);
+        setTrackingData(trackResponse.data);
+      } catch (error) {
+        console.error(`Error on tracking shipment ${error}`);
+        setTrackError('Failed To Track Shipment. Please Re-check the Label ID')
+      }finally {
+        setLoading(false);
+      }
+
+    },
+    [trackRoute]
+   
+  ); 
+
+  useEffect(() => {
+    if(queryId){
+      setLabelId(queryId);
+      handleTracking(queryId)
+    }
+  },[queryId,handleTracking])
+
+  //handle shipment tracking input
+  const onHandleTrack = (e:string) => {
+    setLabelId(e)
+  }
+
+  //submissioon of shipment tracking
+  const onSubmitTracking = (e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    handleTracking(labelId)
+  }
     
 
  
@@ -724,8 +818,7 @@ useEffect(() => {
          });
          return {...state, wishList:deleteWish};
 
-         case HANDLE_CHECKOUT:
-          return {...state,addCartProd:[],totalPrice:0,totalQuantity:0}  
+       
          
 
        default:
@@ -742,7 +835,7 @@ useEffect(() => {
   const filtPopCategory = popularProd.filter((e) => e.id !== '18');
   console.log(filtPopCategory)
   return (
-    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,orderEmpty,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp}}>{children}</EcomContext.Provider>
+    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,orderEmpty,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert}}>{children}</EcomContext.Provider>
   )
 }
 
