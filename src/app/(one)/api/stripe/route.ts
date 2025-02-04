@@ -23,8 +23,8 @@ export async function POST(req:NextRequest){
                 {shipping_rate:"shr_1Qnhq7KL1cYY6FyD891F0r53"}
             ],
             mode:'payment',
-            success_url: `http://localhost:3000/success`,
-            cancel_url: `http://localhost:3000/cart`,
+            success_url: `${process.env.NEXT_PUBLIC_FABRIC}/success`,
+            cancel_url: `${process.env.NEXT_PUBLIC_FABRIC}/cart`,
         });
         return NextResponse.json({ sessionId: cheSession.id },{status:200});
     } catch (error) {
