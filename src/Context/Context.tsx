@@ -93,8 +93,6 @@ function Context({children}:{children:ReactNode}) {
      const [selectValue,setSelectValue] = useState<string>('');
      // add alert for empty cart selection
     const [emptyAlert,setEmptyAlert] = useState<boolean>(false);
-//add alert for order empty fields
-    // const [orderEmpty,setOrderEmpty] = useState<boolean>(false);
 //add alert when product add in the cart
     const [cartAlert,setCartAlert] = useState<boolean>(false);
      //ROUTER FOR NAVIGATION
@@ -259,10 +257,10 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`http://localhost:3000/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`http://localhost:3000/api/clothex`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
