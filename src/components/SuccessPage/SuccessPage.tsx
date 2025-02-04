@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FcPaid } from 'react-icons/fc'
 import { fireWorks } from '@/utils/coffetti';
-// import { CartToCookie } from '@/Context/Context';
 function SuccessPage() {
   const homeNavig = useRouter();
   useEffect(() => {

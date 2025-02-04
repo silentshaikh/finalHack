@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, FormEvent } from "react";
+import { ChangeEvent,FormEvent } from "react";
 
 export interface NavList{
     name:string,
@@ -26,7 +26,6 @@ export interface ContextType{
     searchValue:string;
     searchTogg:boolean;
     emptyAlert:boolean;
-    orderEmpty:boolean;
     cartAlert:boolean;
     colr:boolean;
     shipmentInp:Address;
@@ -262,10 +261,8 @@ export interface ShipmentInp {
 
  //shipment boolean state
 export interface ShipmentInpCheck{
-    // emailCheck:RegExpMatchArray|null;
     phoneCheck:RegExpMatchArray|null;
     firstnameCheck:boolean;
-    // lastnameCheck:boolean;
     countryCheck:boolean;
     stateCheck:boolean;
     addressCheck:boolean;

@@ -1,6 +1,6 @@
 'use client';
 import { paginButton } from '@/utils/Helper/helper';
-import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck, ShipmentInpType, TrackingData, trackingObjType } from '@/utils/Type/type';
+import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck,TrackingData, trackingObjType } from '@/utils/Type/type';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { ChangeEvent, createContext, FormEvent, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import Cookies from "js-cookie";
@@ -94,7 +94,7 @@ function Context({children}:{children:ReactNode}) {
      // add alert for empty cart selection
     const [emptyAlert,setEmptyAlert] = useState<boolean>(false);
 //add alert for order empty fields
-    const [orderEmpty,setOrderEmpty] = useState<boolean>(false);
+    // const [orderEmpty,setOrderEmpty] = useState<boolean>(false);
 //add alert when product add in the cart
     const [cartAlert,setCartAlert] = useState<boolean>(false);
      //ROUTER FOR NAVIGATION
@@ -139,7 +139,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         setNavTogg((prev) => !prev);
     };
      //destructuring the Reducer Cart Action
-     const {CARTSETLIST,ADDCOLOR,ADDSIZE,DECPRODUCTQUAN,INCPRODUCTQUAN,ADDTOCART,INC_ON_CART_PRODUCT,DEC_ON_CART_PRODUCT,ORDER_DONE,RESET_COLOR_SIZE,WISHLIST,CLEAR_CART,DELETE_ITEM,DELETE_WISHLIST,HANDLE_CHECKOUT} = CARTACTION;
+     const {CARTSETLIST,ADDCOLOR,ADDSIZE,DECPRODUCTQUAN,INCPRODUCTQUAN,ADDTOCART,INC_ON_CART_PRODUCT,DEC_ON_CART_PRODUCT,RESET_COLOR_SIZE,WISHLIST,CLEAR_CART,DELETE_ITEM,DELETE_WISHLIST} = CARTACTION;
       //HANDLE SEARCH BAR
       const handleSearchValue = (value:string) => {
         setSearchValue(value);
@@ -153,7 +153,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           dispatch({type:SEARCHPRODUCT,payload:searchValue});
           navigRoute.push('/product');
         }
-      }
+      };
 
       //HANDLE TOGGLE SEARCH
       const handleToggSearch = () => {
@@ -218,7 +218,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
            return state;
        }
  
-     }
+     };
 
      //HANDLE FILTER CATEGORY
      const onHandleSelectBox = (e:ChangeEvent<HTMLSelectElement>) => {
@@ -234,7 +234,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
       }else{
         alert("Plz Fill the fields");
       }
-    }
+    };
 
     
     //FETCH PRODUCT LIST
@@ -310,7 +310,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
   const onProductDetail = (id:string) => {
     cartDispatch({ type: RESET_COLOR_SIZE, payload: id });
     navigRoute.push(`/product/${id}`);
-    // setColr(false);
+
   };
    //PRODUCT INCREMENT AND DECREMENT
    const onProdInc= (id:string) => {
@@ -447,6 +447,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     };
     
     //Handle Shipment Form
+
     const onHandleShipmentInp = (e:ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setShipmentInp((prev: Address) => ({ ...prev, [name]: value }));
@@ -456,8 +457,6 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
   
       const {addressLine1,cityLocality,countryCode,name,phone,postalCode,stateProvince} = shipmentInp;
       //Regex For Input Fields
-      // const emailRegex = /^[a-zA-Z0-9\_\.\%\+\-]+\@[a-zA-Z0-9\.\-]+\.[a-z]{2,7}$/;
-      // const matchEmail  = email.match(emailRegex); 
       const phoneNumRegex = /^[0-9]{11}$/;
       const matchPhoneNum = phone.match(phoneNumRegex);
       const postalCodeNumRegex = /^[0-9]{5}$/;
@@ -493,7 +492,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           console.log(shipResponse.data)
           setRatesList(shipResponse.data.shipmentDetail.rateResponse.rates);
         } catch (error) {
-          console.error('Error in Fetching Rating')
+          console.error(`Error in Fetching Rating : ${error}`)
           setShipError('Error when Fetching the Rate List')
         }finally{
           setLoading(false)
@@ -556,8 +555,8 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         setTrackingData(trackResponse.data);
       } catch (error) {
         console.error(`Error on tracking shipment ${error}`);
-        setTrackError('Failed To Track Shipment. Please Re-check the Label ID')
-      }finally {
+        setTrackError('Failed To Track Shipment. Please Re-check the Label ID');
+      }finally{
         setLoading(false);
       }
 
@@ -834,7 +833,7 @@ useEffect(() => {
   const filtPopCategory = popularProd.filter((e) => e.id !== '18');
   console.log(filtPopCategory)
   return (
-    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,orderEmpty,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert}}>{children}</EcomContext.Provider>
+    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert}}>{children}</EcomContext.Provider>
   )
 }
 

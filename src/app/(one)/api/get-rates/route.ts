@@ -1,5 +1,5 @@
 import shipEngine from "@/utils/shipEngine";
-import { Address,Package, ShipmentInpCheck, ShipmentInpType} from "@/utils/Type/type";
+import { Address,Package} from "@/utils/Type/type";
 import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest){
     try {

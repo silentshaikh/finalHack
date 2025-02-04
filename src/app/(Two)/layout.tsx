@@ -4,6 +4,8 @@ import "../globals.css";
 import Context from "@/Context/Context";
 import Footer from "@/components/Footer/Footer";
 import SecondHeader from "@/components/SecondHeader/SecondHeader";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Suspense } from "react";
 // import CartProvider from "@/Context/CartProvider/CartProvider";
 
 const geistSans = localFont({
@@ -31,15 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <CartProvider> */}
-
+        <Suspense fallback={ <div>loading...</div> }>
+      <ClerkProvider>
         <Context>
-        {/* <TopBar/> */}
         <SecondHeader/>
         {children}
         <Footer/>
         </Context>
-        {/* </CartProvider> */}
+      </ClerkProvider>
+        </Suspense>
       </body>
     </html>
   );

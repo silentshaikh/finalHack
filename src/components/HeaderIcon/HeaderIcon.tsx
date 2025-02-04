@@ -3,11 +3,7 @@ import { useEcomHook } from '@/Context/Context';
 import { poppins } from '@/utils/Helper/helper';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useShoppingCart } from 'use-shopping-cart';
-
 function HeaderIcon() {
-  const navigCart = useRouter();
   const {handleToggSearch,cartData,cartOperate} = useEcomHook();
   const {totalQuantity} = cartData;
   return (
