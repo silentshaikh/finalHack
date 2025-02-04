@@ -49,7 +49,8 @@ draggable
 pauseOnHover
 theme="light"
 
-/>}
+/>
+}
  
     </section>
   )

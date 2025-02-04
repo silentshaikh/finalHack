@@ -388,7 +388,6 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         return;
       }
       setSignUpAlert(false);
-    alert(userEmail);
       try {
         const { addCartProd,totalPrice } = cartData;
         const loadStripe = await getStripe();
