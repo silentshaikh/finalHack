@@ -1,5 +1,4 @@
 'use client';
-
 import { useEcomHook } from "@/Context/Context";
 import { poppins } from "@/utils/Helper/helper";
 import Link from "next/link";
