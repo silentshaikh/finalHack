@@ -454,7 +454,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           if(!userEmailResp){
             throw new Error('Failed To send Email to User')
           }
-            
+           toast("Just Wait") 
             console.log("🔄 Redirecting to Stripe Checkout...");
               await loadStripe?.redirectToCheckout({ sessionId: responseData.sessionId });
             }
