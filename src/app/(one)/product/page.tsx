@@ -1,4 +1,4 @@
-import LoadingPage from "@/components/LoadingPage/LoadingPage"
+// import LoadingPage from "@/components/LoadingPage/LoadingPage"
 // import ErrorPage from "@/components/ErrorPage/ErrorPage"
 import ProductBar from "@/components/ProductBar/ProductBar"
 import ProductSection from "@/components/ProductSection/ProductSection"
@@ -11,7 +11,7 @@ function Product() {
       <ShopCollection/>
       <ProductBar/>
       <ProductSection/>
-      <LoadingPage/>
+      {/* <LoadingPage/> */}
      
     </main>
   )
