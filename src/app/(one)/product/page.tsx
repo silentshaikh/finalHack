@@ -3,7 +3,6 @@ import LoadingPage from "@/components/LoadingPage/LoadingPage"
 import ProductBar from "@/components/ProductBar/ProductBar"
 import ProductSection from "@/components/ProductSection/ProductSection"
 import ShopCollection from "@/components/ShopCollection/ShopCollection"
-import { poppins, rubikBuble } from "@/utils/Helper/helper"
 
 
 function Product() {
