@@ -7,6 +7,7 @@ import Context from "@/Context/Context";
 import Footer from "@/components/Footer/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Suspense } from "react";
+import LoadingPage from "@/components/LoadingPage/LoadingPage";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -33,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-<Suspense fallback={ <div>loading...</div> }>
+<Suspense fallback={ <LoadingPage/> }>
         <ClerkProvider>
         <Context>
         <TopBar/>

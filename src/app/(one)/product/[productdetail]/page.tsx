@@ -16,6 +16,7 @@ function ProductDetail({params}:{params:{productdetail:string}}) {
       <EmptyAlert/>
       <CartAlert/>
       <CompanyBar/>
+      
     </main>
   )
 }

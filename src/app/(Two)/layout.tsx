@@ -6,6 +6,7 @@ import Footer from "@/components/Footer/Footer";
 import SecondHeader from "@/components/SecondHeader/SecondHeader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Suspense } from "react";
+import LoadingPage from "@/components/LoadingPage/LoadingPage";
 // import CartProvider from "@/Context/CartProvider/CartProvider";
 
 const geistSans = localFont({
@@ -33,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={ <div>loading...</div> }>
+        <Suspense fallback={ <LoadingPage/> }>
       <ClerkProvider>
         <Context>
         <SecondHeader/>
