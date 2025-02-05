@@ -56,7 +56,18 @@ export interface ContextType{
     onCreatingLabel:() =>void;
     onHandleTrack: (e:string) => void;
     onSubmitTracking: (e:FormEvent<HTMLFormElement>) => void;
+    onHandleReview: (value:string) => void;
+    reviewInp:string;
+    onFormReview: (e:FormEvent<HTMLFormElement>) => void;
+    reviewList:ReviewList[];
 };
+
+//Review List
+export interface ReviewList{
+  reviewId:number;
+  userName:string;
+  userReview:string;
+}
 //Card Type for Cart Page
 export interface TypeForCartCard {
     name: string;

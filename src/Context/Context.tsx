@@ -1,6 +1,6 @@
 'use client';
 import { paginButton } from '@/utils/Helper/helper';
-import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ShipmentInpCheck,TrackingData, trackingObjType } from '@/utils/Type/type';
+import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ReviewList, ShipmentInpCheck,TrackingData, trackingObjType } from '@/utils/Type/type';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { ChangeEvent, createContext, FormEvent, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import Cookies from "js-cookie";
@@ -99,6 +99,10 @@ function Context({children}:{children:ReactNode}) {
      const navigRoute = useRouter();
      //ADD COLOR ON WISHLIST ICON
 const [colr,setColr] = useState<boolean>(false);
+//HANDLE REVIEW INPUT
+const [reviewInp,setReviewInp] = useState<string>('');
+//REVIEW LIST OF EACH PRODUCT
+const [reviewList,setReviewList] = useState<ReviewList[]>([]);
 //HANDLE SHIPMENT INPUT
 const [shipmentInp,setShipmentInp] = useState<Address>({
   name: "",
@@ -257,10 +261,10 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`http://localhost:3000/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`http://localhost:3000/api/clothex`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
@@ -310,6 +314,23 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     navigRoute.push(`/product/${id}`);
 
   };
+  //Handle Textarea of Review
+  const onHandleReview = (value:string) => {
+    setReviewInp(value)
+  }
+  //Handle Form of Review
+  const onFormReview = (e:FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(reviewInp.trim() === ''){
+      toast('Please Fill that field')
+    }else{
+      if(!isSignedIn){
+        toast('Please Log-in to add a review')
+        return;
+      };
+      setReviewList((prev) => [...prev,{reviewId:new Date().getTime(),userName,userReview:reviewInp}])
+    }
+  }
    //PRODUCT INCREMENT AND DECREMENT
    const onProdInc= (id:string) => {
     cartDispatch({type:INCPRODUCTQUAN,payload:id});
@@ -462,7 +483,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
       
       const newInpValidCheck: ShipmentInpCheck = {
         phoneCheck: matchPhoneNum,
-        firstnameCheck: name.length >= 3 && name.length <= 11,
+        firstnameCheck: name.length >= 3 && name.length <= 16,
         addressCheck: addressLine1.length >= 10 && addressLine1.length <= 30,
         cityCheck: cityLocality.length >= 4 && cityLocality.length <= 20,
         countryCheck: countryCode.length >= 1 && countryCode.length <= 5,
@@ -623,8 +644,6 @@ useEffect(() => {
        case  INCPRODUCTQUAN:
          const updatedCartInc = state.cartList.map((e) => {
            if (e.id === (action.payload as string)){
-           //  const quanInc = ++e.productquantity;
-           // alert(e.product_id)
              return { ...e, productQuantity: e.productQuantity+1};
            }; 
              return e;
@@ -831,7 +850,7 @@ useEffect(() => {
   const filtPopCategory = popularProd.filter((e) => e.id !== '18');
   console.log(filtPopCategory)
   return (
-    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert}}>{children}</EcomContext.Provider>
+    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert,onHandleReview,reviewInp,onFormReview,reviewList}}>{children}</EcomContext.Provider>
   )
 }
 
