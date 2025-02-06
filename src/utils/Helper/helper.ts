@@ -7,18 +7,6 @@ export const poppins = Poppins({
     display: 'swap', 
 });
 
-//Fetch Mock API to integrate in sanity
-// export const fetchMock = async () => {
-//     try {
-//         const mockApi = await fetch(process.env.NEXT_PUBLIC_MOCK_API as string);
-//     const apiData:Product[] = await  mockApi.json();
-//     console.log(apiData);
-//     return apiData;
-//     } catch (error) {
-//         throw new Error('Api Not Found');
-//     }
-// };
-// fetchMock();
 export const navList:NavList[] = [
     {
         name:'home',

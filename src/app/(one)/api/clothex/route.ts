@@ -7,17 +7,6 @@ function setCorsHeaders(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
 }
-// function setCorsHeaders(response: NextResponse) {
-//   const allowedOrigins = ["http://localhost:3000", "https://fabrichaven.vercel.app"];
-//   const origin = response.headers.get("Origin");
-
-//   if (allowedOrigins.includes(origin as string)) {
-//     response.headers.set("Access-Control-Allow-Origin", origin as string);
-//   }
-//   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-//   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-// }
-
 
 // API handler
 export async function GET(req: NextRequest) {

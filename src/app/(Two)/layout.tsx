@@ -7,7 +7,6 @@ import SecondHeader from "@/components/SecondHeader/SecondHeader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Suspense } from "react";
 import LoadingPage from "@/components/LoadingPage/LoadingPage";
-// import CartProvider from "@/Context/CartProvider/CartProvider";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
