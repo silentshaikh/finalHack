@@ -60,7 +60,7 @@ const fetchProductList = async (api: string) => {
     throw new Error(`${error}: API Not Found`);
   }
 };
-
+```
 
           
 ## 🚀 SANITY (CMS)
@@ -72,7 +72,7 @@ const fetchProductList = async (api: string) => {
 
     # ---- PRODUCT SCHEMA ---- #
 
-    ```typescript
+    ```ts
     export const productList = {
     name:'productlist',
     title:'Product List',
