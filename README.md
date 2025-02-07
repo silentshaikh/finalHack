@@ -1,82 +1,78 @@
-# FABRIC HAVEN AN ONLINE SHOPPING PLATFORM
+# FABRIC HAVEN - AN ONLINE SHOPPING PLATFORM
 
-Author : Shaikh Abdul Moiz
-Key Role : Leading the empire of Fabric Haven
+## Author: Shaikh Abdul Moiz  
+**Key Role:** Leading the empire of Fabric Haven
 
-# MARKETPLACE OVERVIEW
+## 📌 Marketplace Overview  
+Fabric Haven is a modern online shopping platform built with Next.js, Sanity CMS, and third-party APIs for payments and shipping.
 
-**The outline will give me technical information of our market that what we have implemented on here, suc as functionalities, endpoints of API etc.**
+---
 
-# SECTION OF FABRIC HAVEN
+## 🏗️ Project Structure 
 
-We have divided our marketplace into three section. Here it is:
+---
 
-1) FRONT-END ---> (NEXTJS) 
+## 🖥️ Tech Stack  
 
-2) SANITY ----> (As a Backend to manage Product API and Orders data)
+| Feature             | Technology         |
+|---------------------|-------------------|
+| **Front-End**      | Next.js 14, React  |
+| **Backend (CMS)**  | Sanity.io          |
+| **Authentication** | Clerk             |
+| **Payments**       | Stripe            |
+| **Shipping**       | ShipEngine        |
 
-3) THIRD PARTY APIs ----->  (Stripe for Payment , ShipEngine for Shipment Tracking)
-
-4) AUTHENTICATION -----> (Clerk)
-
-
-# WHAT WE HAVE DONE IN ALL SECTION ?
-
-   # ---- YOU WANT TO KNOW ---- #
-
-
-    FRONT-END :
-    ------------
-
-1) We are using Nextjs to perform our Front-End Job.
-2) We are creating a Home Page to show user when he visit our Web-Application.
-3) We have also a list of Popular Product on Home Page.
-4) We can also called Home Page as a Landing Page.
-5) We have created a Header fro to show some link that people can navigate to other page like product, cart, login.
-5) Here , we have created a footer for additional Info of our Marketplace.
-6) We have developed a Product Page wgere all the product has listed successfully and also implement functionality such as a Search Bar, Pagination and Filter via Category.
-7) We have developed a Cart Page also where user can select the products that they want to buy here, I have perform all operation like Increment , Decrement , Delete Item and also a clear Cart.
-8) We have also developed a Wishlist page for that product that user want to buy later.
-9) With Nextjs, we have validated all the thing that will help user when he will be buying some product from our marketplace like cart functionality and many other task.
-10) We have also developed the Ui for Shipment process where we have to form , Rate list and Tracking Detail
-11) The main thing in every Front-End project is Responsiveness, we have covered that section . We have manage the UI of our marketplace according to screen sizes.
-12) Nextjs is a Framework that built on React, so we are handling the API request via React hooks in Nextjs.
-
-    ### ---- Handling the API ---- ###
-
-     const fetchProductList = async (api:string) => {
-      try {
-        const fetchProd = await fetch(api,{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          cache:'force-cache'
-        });
-    const getProd:Product[] = await fetchProd.json();
-        console.log(getProd);
-        return getProd;
-      } catch (error) {
-        throw new Error(`${error}: API Not Found`);
-      }
-    };
-
-    # -------- XXXXXXXXXXXXXXX -------- #
-
-13) We are handling the Third Part APIs like stripe and ship-engine in our API Routes in api folder with "route.ts" file in Nextjs.
-14)  We are using Cookies to store our Cart Data.
+---
 
 
-     SANITY (CMS) :
-    ------------
 
-1) We are using Sanity to manage oru product, order etc.
-2) First of all, we had run the migration file (migrate.mjs) in scripts folder to migrate the mock API data in Sanity.
-3) We are using private data like token in .env file to run operations securly.
-4) For perform migration processs, so we need to set our schemna via document and that is Product where we defined all the field that will migrate in sanity
+## ✅ Features Implemented  
+
+### **🖥️ FRONT-END (Next.js)**
+1. **Next.js** is used to handle the entire front-end development.
+2. **Home Page (Landing Page)** with a list of **popular products**.
+3. **Header & Navigation:** Includes links to **Products, Cart, and Login** for easy navigation.
+4. **Footer Section:** Provides additional marketplace information.
+5. **Product Page:** Displays all products with **Search, Pagination, and Category Filtering**.
+6. **Cart Page:** Users can **add, remove, increment, decrement**, and **clear the cart**.
+7. **Wishlist Page:** Allows users to **save products** they want to buy later.
+8. **Shipment Process UI:** Includes **forms, rate lists, and tracking details**.
+9. **Responsive Design:** The entire UI is fully optimized for **mobile, tablet, and desktop**.
+10. **API Handling:** Using React hooks to fetch data dynamically in Next.js.
+
+---
+
+### **🔗 API Handling Example in Next.js**
+```ts
+const fetchProductList = async (api: string) => {
+  try {
+    const fetchProd = await fetch(api, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: 'force-cache'
+    });
+    const getProd: Product[] = await fetchProd.json();
+    console.log(getProd);
+    return getProd;
+  } catch (error) {
+    throw new Error(`${error}: API Not Found`);
+  }
+};
+
+
+          
+## 🚀 SANITY (CMS)
+
+1. We are using Sanity to manage oru product, order etc.
+2. First of all, we had run the migration file (migrate.mjs) in scripts folder to migrate the mock API data in Sanity.
+3. We are using private data like token in .env file to run operations securly.
+4. For perform migration processs, so we need to set our schemna via document and that is Product where we defined all the field that will migrate in sanity
 
     # ---- PRODUCT SCHEMA ---- #
 
+    ```typescript
     export const productList = {
     name:'productlist',
     title:'Product List',
@@ -169,97 +165,113 @@ We have divided our marketplace into three section. Here it is:
             type:'datetime'
         },
     ]
-}
-
- # -------- XXXXXXXXXXXXXXX -------- #
-
-4) Once, the process will done , so we can see all the product in Sanity Studio.
+}```
 
 
-    THIRD PARTY API :
-    -------------------
+5. Once, the process will done , so we can see all the product in Sanity Studio.
+
+    ## 🚀 THIRD-PARTY APIs
 
 
-1) We are using Third Party APIs to perform operation like payment handling and shipment tracking.
-2) Stripe is used tp perform checkout operation, here we doesn't need to create our own checkout for market. If w want to create so we can. But for now we are it, to work securely and fast.
-3) The next task is shipment, so we are using Ship-Engine to perform Shipment Tracking on Orders when it will go from warehaouse to customer.
+1. We are using **Third Party APIs** to perform operation like **payment handling** and **shipment tracking**.
+2. **Stripe** is used tp perform checkout operation, here we does not need to create our own checkout for market. If w want to create so we can. But for now we are it, to work securely and fast.
+3. The next task is **shipment**, so we are using **Ship-Engine** to perform Shipment Tracking on Orders when it will go from **warehouse** to **customer**.
+
+## 📌 API Endpoints
+
+| **Endpoint**       | **Method** | **Purpose**                          | **Response Example**                                                 |
+|--------------------|-----------|--------------------------------------|----------------------------------------------------------------------|
+| `/productlist`     | `GET`      | Fetch all product details           | `{ "name": "Product Name", "slug": "product-slug", "price": 100 }`  |
+| `/tracking`       | `GET`      | Fetch real-time tracking updates    | `{ "trackingId": "AB123", "status": "In Transit" }`                 |
+| `/inventory`      | `GET`      | Fetch real-time stock levels        | `{ "productId": 789, "stock": 50 }`                                 |
+| `/cart`           | `POST`     | Add product to cart                 | `{ "cartId": 101, "items": [...] }`                                 |
+| `/wishlist`       | `POST`     | Add product to wishlist             | `{ "wishlistId": 202, "items": [...] }`                             |
 
 
-    # ---- ENDPOINT OF APIs ---- #
+    # 🛒 Marketplace Roadmap
 
+The roadmap is simple, not as critical as you might think. Here’s a breakdown of our marketplace development process:  
 
-    | Endpoint             | API Method | Purpose of Methods                           | Response Example                                                       |
-| -------------------- | ------ | ---------------------------------- | ---------------------------------------------------------------------- |
-| /productlist          | GET    | Fetch all detail of products          | **[ { "name": "Product Name", "slug": "product-slug", "price": 100 } ]** |
-| /tracking | GET    | Fetch real-time tracking updates   | **{ "trackingId": "AB123", "status": "In Transit" }**                    |
-| /inventory        | GET    | Fetch real-time stock levels       | **{ "productId": 789, "stock": 50 }**                                    |
-| /cart              | POST   | Add product to cart                | **{ "cartId": 101, "items": [...] }**                                    |
-| /wishlist          | POST   | Add product to wishlist            | **{ "wishlistId": 202, "items": [...] }**                               |
+## 🔑 Authentication
+    Authentication is essential for securing our marketplace and ensuring a smooth shopping experience.
 
-   # ------- !!!!!!!!!!!!!!!!!!!!!!!!!!! ------ #
+        ### 🛍️ User Registration & Login Flow
+        1. When a **new user** comes our web-application want to buy product.
+        2. But if he is not **registered** in our web-appliction he cannot buy project.
+        3. If user do not **register** in our web-application so, our **web-application** cannot found it and does not know him.
+        4. **Registration** is like that if we **regstered** we can buy product what if we are not so we cannot.
+        5. User can simply go to **sign-up** if he is not **register** in our web-application or he wil go to **login**.
+        6. After that , he is **registered** in our **marketplace** so, he can buy product easily
+    ---
+     ### 📦  Product Listing
 
+        - When user will go to **Product Page** , so the all product will list over there and we have also perform some functionality over there like:
+        - 🔍 **Search Bar** – Users can search for specific products.  
+        - 📊 **Pagination** – Products are displayed in pages for easy navigation.  
+         - 🎯 **Filters** – Users can filter products by category, price, etc.  
+        - 🛠️ **Data Source:** Products are fetched from **Sanity CMS**, where we have migrated mock API data.  
+    ---
+     ### ❤️  Wishlist
+        - We have also a **Wishlist Page** where user can **add their product** that he will buy later.
+    ---
+     ### 🛒  Cart Page
+         - The **Cart Page** allows users to manage products before checkout.  
+        - Users can:    
+        - Add/remove products.  
+        - Update quantity.  
+        - View total cost.  
+        - 💳 **Payment Processing:** Checkout is handled using **Stripe**, ensuring a secure and fast payment process.  
+    ---
+    ### 🚚  Shipment Tracking
 
-    
-    ROADMAP OF OUR MARKETPLACE :
-    --------------------------
+       - We use a **Third-Party API** for shipment tracking.  
+        - **ShipEngine** is integrated to provide real-time tracking updates.  
+        - Users can track their orders **from the warehouse to their delivery location** seamlessly.  
+    ---
 
-    The roadmap is simple not a critical like you think. We are explaining it :
+        ## 🛠️ Testing Section  
 
-    1) AUTHENTICATION:
-        * When a user come in our web-application want to buy product.
-        * But if he isn't registered in our web-appliction he can't buy project.
-        * If user don't register in our web-application so, our web-application can't found it and doesn't know him.
-        * Registration is like that if we regstered we can buy product what if we are not so we can't.
-        * User can simply go to sign-up if he's not register in our web-application or he wil go to login.
-        * After that , he is registered in our marketplace so, he can buy product easily
+        After completing all the development processes of our **marketplace**, we proceeded with **testing** to ensure everything works smoothly.  
 
-     2) PRODUCT LISTING:
-        * When user will go to product page , so the all product will list over there and we have also perform some functionality over there like Search bar, Pagination, Filter etc.
-        * The Product is fetching from sanity CMS because, we have perform migration on Sanity to send MOCK API data to Sanity.
+        ### ✅ Tested Workflows:  
+            We have tested all key functionalities, including:  
 
-     3) WISHLIST:
-        * We have also a wishlist page where user can add their product that he will buy later.
+        1️⃣ **User Registration** – Ensuring users can sign up and log in successfully.  
+        2️⃣ **Product Listing** – Verifying products display correctly with search, filters, and pagination.  
+        3️⃣ **Cart Management** – Adding, removing, and updating cart items without errors.  
+        4️⃣ **Wishlist Section** – Checking if users can save and retrieve their wishlist items.  
+        5️⃣ **Checkout Section** – Testing the payment flow via **Stripe** for smooth transactions.  
+        6️⃣ **Shipment Section** – Tracking orders through **ShipEngine** from warehouse to delivery.  
 
-     4) CART PAGE
-         * Here , we have a Cart page where user can add products that he wants to buy and then they will pay the payment of that product that he want in Checkout with the help of Stripe.
+        ### 🏆 Test Results  
+        - ✅ All sections have been **successfully tested** and are **working perfectly**! 🎉  
 
-    5) SHIPMENT TRACKING
-        * We are using Third Part API to performing shipment tracking easily. The API is Ship Engine. 
-        * With the help of ship-engine user can track their order from to warehouse to delivery location.
+        ## 🚀 Deployment Phase  
 
+        Once we have completed all the tasks required for our **marketplace**, the next step is to make it **live**. We need to host our marketplace on platforms like **Vercel, Netlify**, or others.  
 
+        We are using **Vercel** for deployment.  
 
-      TESTING SECTION :
-      --------------------------
+        ### 🔧 Steps for Deployment:  
+        1️⃣ **Prepare the Code** – Ensure all features are implemented and tested.  
+        2️⃣ **Environment Variables** – Securely set up `.env` files for private data (e.g., API keys).  
+        3️⃣ **Deploy on Vercel** – Push the latest code to GitHub and deploy via **Vercel**.  
+        4️⃣ **Final Testing** – Verify that everything works smoothly in production.  
+        5️⃣ **Live Marketplace** – Our marketplace is now live and ready for users! 🎉  
 
-      After Completed all the process of our marketplace, Now we need to test our marketplace:
+        ---
 
-       * We have tested all workflows like : 
-        1) User Registration.
-        2) Product Listing.  
-        3) Cart Management.
-        3) Wishlist Section.
-        4) Checkout Section.
-        5) Shipment Section.
+        ## 🏁 Conclusion  
 
-        * and all of the section is working perfeclty.
+        This document is designed to **guide you** through the features implemented in our **marketplace** and how the platform functions.  
 
+        ### 🔹 Key Components of Our Marketplace:  
+        1️⃣ **Front-End** – Built with **Next.js + TypeScript** for a seamless user experience.  
+        2️⃣ **Sanity (CMS)** – Manages all **products, orders, and inventory** dynamically.  
+        3️⃣ **Third-Party APIs** – Handles **payments (Stripe)** and **shipment tracking (ShipEngine)**.  
 
-        DEPLOYEMENT PHASE :
-        --------------------------
+        ---
 
-        Once, we have completed all the task that our marketplace want. So the next step, is to set our Market place live. We need to host our marketplace on platform like Vercel, Netlify and other. We are using Vercel to deploy our Market place. Now we need to set all task that we have developed and also contain private data securely e.g (env variable). Then all Formalities will done, so our Market place will host successfully and then we will need to test it that how's it work.
+        ## 🎯 The End 🎯  
 
-
-        # CONCLUSION:
-            This is document is only design to guide you that what featues have implemented in our website.
-            Then, how our platform will work:
-
-            1) FRONT-END 
-
-            2) SANITY 
-
-            3) THIRD PARTY APIs 
-
-    <--------------------------------- ### THE END ### --------------------------------------------->
 
