@@ -179,6 +179,7 @@ const fetchProductList = async (api: string) => {
 
 ## 📌 API Endpoints
 
+------------------------------------------------------------------------------------------------------------------------------------------------
 | **Endpoint**       | **Method** | **Purpose**                          | **Response Example**                                                 |
 |--------------------|-----------|--------------------------------------|----------------------------------------------------------------------|
 | `/productlist`     | `GET`      | Fetch all product details           | `{ "name": "Product Name", "slug": "product-slug", "price": 100 }`  |
@@ -186,13 +187,13 @@ const fetchProductList = async (api: string) => {
 | `/inventory`      | `GET`      | Fetch real-time stock levels        | `{ "productId": 789, "stock": 50 }`                                 |
 | `/cart`           | `POST`     | Add product to cart                 | `{ "cartId": 101, "items": [...] }`                                 |
 | `/wishlist`       | `POST`     | Add product to wishlist             | `{ "wishlistId": 202, "items": [...] }`                             |
+----------------------------------------------------------------------------------------------------------------------------------------------
 
-
-    # 🛒 Marketplace Roadmap
+    🛒 Marketplace Roadmap
 
 The roadmap is simple, not as critical as you might think. Here’s a breakdown of our marketplace development process:  
 
-## 🔑 Authentication
+ 🔑 Authentication
     Authentication is essential for securing our marketplace and ensuring a smooth shopping experience.
 
         ### 🛍️ User Registration & Login Flow
@@ -203,7 +204,7 @@ The roadmap is simple, not as critical as you might think. Here’s a breakdown 
         5. User can simply go to **sign-up** if he is not **register** in our web-application or he wil go to **login**.
         6. After that , he is **registered** in our **marketplace** so, he can buy product easily
     ---
-     ### 📦  Product Listing
+      📦  Product Listing
 
         - When user will go to **Product Page** , so the all product will list over there and we have also perform some functionality over there like:
         - 🔍 **Search Bar** – Users can search for specific products.  
@@ -211,10 +212,10 @@ The roadmap is simple, not as critical as you might think. Here’s a breakdown 
          - 🎯 **Filters** – Users can filter products by category, price, etc.  
         - 🛠️ **Data Source:** Products are fetched from **Sanity CMS**, where we have migrated mock API data.  
     ---
-     ### ❤️  Wishlist
+      ❤️  Wishlist
         - We have also a **Wishlist Page** where user can **add their product** that he will buy later.
     ---
-     ### 🛒  Cart Page
+      🛒  Cart Page
          - The **Cart Page** allows users to manage products before checkout.  
         - Users can:    
         - Add/remove products.  
@@ -222,18 +223,18 @@ The roadmap is simple, not as critical as you might think. Here’s a breakdown 
         - View total cost.  
         - 💳 **Payment Processing:** Checkout is handled using **Stripe**, ensuring a secure and fast payment process.  
     ---
-    ### 🚚  Shipment Tracking
+     🚚  Shipment Tracking
 
        - We use a **Third-Party API** for shipment tracking.  
         - **ShipEngine** is integrated to provide real-time tracking updates.  
         - Users can track their orders **from the warehouse to their delivery location** seamlessly.  
     ---
 
-        ## 🛠️ Testing Section  
+        🛠️ Testing Section  
 
         After completing all the development processes of our **marketplace**, we proceeded with **testing** to ensure everything works smoothly.  
 
-        ### ✅ Tested Workflows:  
+         ✅ Tested Workflows:  
             We have tested all key functionalities, including:  
 
         1️⃣ **User Registration** – Ensuring users can sign up and log in successfully.  
@@ -243,16 +244,16 @@ The roadmap is simple, not as critical as you might think. Here’s a breakdown 
         5️⃣ **Checkout Section** – Testing the payment flow via **Stripe** for smooth transactions.  
         6️⃣ **Shipment Section** – Tracking orders through **ShipEngine** from warehouse to delivery.  
 
-        ### 🏆 Test Results  
+         🏆 Test Results  
         - ✅ All sections have been **successfully tested** and are **working perfectly**! 🎉  
 
-        ## 🚀 Deployment Phase  
+         🚀 Deployment Phase  
 
         Once we have completed all the tasks required for our **marketplace**, the next step is to make it **live**. We need to host our marketplace on platforms like **Vercel, Netlify**, or others.  
 
         We are using **Vercel** for deployment.  
 
-        ### 🔧 Steps for Deployment:  
+         🔧 Steps for Deployment:  
         1️⃣ **Prepare the Code** – Ensure all features are implemented and tested.  
         2️⃣ **Environment Variables** – Securely set up `.env` files for private data (e.g., API keys).  
         3️⃣ **Deploy on Vercel** – Push the latest code to GitHub and deploy via **Vercel**.  
@@ -261,17 +262,17 @@ The roadmap is simple, not as critical as you might think. Here’s a breakdown 
 
         ---
 
-        ## 🏁 Conclusion  
+         🏁 Conclusion  
 
         This document is designed to **guide you** through the features implemented in our **marketplace** and how the platform functions.  
 
-        ### 🔹 Key Components of Our Marketplace:  
+         🔹 Key Components of Our Marketplace:  
         1️⃣ **Front-End** – Built with **Next.js + TypeScript** for a seamless user experience.  
         2️⃣ **Sanity (CMS)** – Manages all **products, orders, and inventory** dynamically.  
         3️⃣ **Third-Party APIs** – Handles **payments (Stripe)** and **shipment tracking (ShipEngine)**.  
 
         ---
 
-        ## 🎯 The End 🎯  
+         🎯 The End 🎯  
 
 
