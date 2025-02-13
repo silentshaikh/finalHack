@@ -468,6 +468,8 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           }
            toast("Just Wait") 
             console.log("🔄 Redirecting to Stripe Checkout...");
+            
+            //STORE ORDERS INTO SANITY
             try {
               const userOrders = await fetch('/api/store-orders',{
                 method:'POST',
@@ -493,10 +495,8 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         alert("Something went wrong during checkout. Please try again.");
       }
     };
-    //STORE ORDERS INTO SANITY
-    const storeOrders = async () => {
     
-    };
+  
     
     //Handle Shipment Form
 
