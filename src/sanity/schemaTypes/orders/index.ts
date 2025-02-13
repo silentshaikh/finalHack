@@ -3,12 +3,12 @@ export const orderList = {
     title:'Order List',
     type:'document',
     fields:[
-        {
-            name:'user',
-            title:'User',
-            type:'reference',
-            to:[{type:'userlist'}]
-        },
+        // {
+        //     name:'user',
+        //     title:'User',
+        //     type:'reference',
+        //     to:[{type:'userlist'}]
+        // },
         {
             name:'orderitems',
             title:'Order Items',
@@ -27,19 +27,17 @@ export const orderList = {
                 {
                     name:'productimage',
                     title:'Product Image',
-                    type:'string',
+                    type:'image',
                 },
                 {
                     name:'productsize',
                     title:'Product Size',
-                    type:'array',
-                    of:[{type:'string'}]
+                    type:'string',
                 },
                 {
                     name:'productcolor',
                     title:'Product Color',
-                    type:'array',
-                    of:[{type:'string'}]
+                    type:'string',
                 },
                 {
                     name:'price',

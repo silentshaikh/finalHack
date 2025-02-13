@@ -468,15 +468,25 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           }
            toast("Just Wait") 
             console.log("🔄 Redirecting to Stripe Checkout...");
+            try {
+              const userOrders = await fetch('/api/store-orders',{
+                method:'POST',
+                headers:{
+                  "Content-Type":'application/json'
+                },
+                body:JSON.stringify({
+                  addCartProd,
+                })
+              });
+              const orderData = await userOrders.json();
+              console.log(orderData)
+             } catch (error) {
+              alert(`Error on Order Storing: ${error}`)
+             }
               await loadStripe?.redirectToCheckout({ sessionId: responseData.sessionId });
+             
             }
-            if(!responseData.sessionId){
-              alert("Invalid response from checkout session. Please try again.");
-              return;
-            }else{
-              //POST REQUEST TO STORE DATA INTO SANITY
-              storeOrders();
-            }
+            
     
       } catch (error) {
         console.error("❌ Error in Checkout:", error);
@@ -485,23 +495,8 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     };
     //STORE ORDERS INTO SANITY
     const storeOrders = async () => {
-      const {addCartProd} = cartData;
-     try {
-      const userOrders = await fetch('/api/store-orders',{
-        method:'POST',
-        headers:{
-          "Content-Type":'application/json'
-        },
-        body:JSON.stringify({
-          addCartProd
-        })
-      });
-      const orderData = await userOrders.json();
-      console.log(orderData)
-     } catch (error) {
-      alert(`Error on Order Storing: ${error}`)
-     }
-    }
+    
+    };
     
     //Handle Shipment Form
 
