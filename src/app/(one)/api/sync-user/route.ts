@@ -1,8 +1,8 @@
 import { client } from "@/sanity/lib/client";
 import { currentUser } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 
-export async function POST(req:NextRequest){
+export async function POST(){
    try {
     const currUser = await currentUser();
     if(!currUser){
