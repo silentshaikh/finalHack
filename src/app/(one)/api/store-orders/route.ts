@@ -60,7 +60,7 @@ export async function POST(req:NextRequest){
             });
         return NextResponse.json({message:'Order Store Successfully'},{status:201})
     } catch (error) {
-        return NextResponse.json({message:'Error when storing orders'},{status:500})
+        return NextResponse.json({message:`Error when storing orders : ${error}`},{status:500})
     }
 
 }
