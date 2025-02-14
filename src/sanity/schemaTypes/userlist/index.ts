@@ -22,8 +22,8 @@ export const userList = {
         // {
         //     name:'orderhistory',
         //     title:'Order History',
-        //     type:'array',
-        //     of:[{type:'reference',to:[{type:'orderlist'}]}]
+        //     type:'reference',
+        //     to:[{type:'orderlist'}]
         // }
     ]
 };

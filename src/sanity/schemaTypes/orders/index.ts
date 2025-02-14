@@ -3,12 +3,12 @@ export const orderList = {
     title:'Order List',
     type:'document',
     fields:[
-        // {
-        //     name:'user',
-        //     title:'User',
-        //     type:'reference',
-        //     to:[{type:'userlist'}]
-        // },
+        {
+            name:'user',
+            title:'User',
+            type:'reference',
+            to:[{type:'userlist'}]
+        },
         {
             name:'orderitems',
             title:'Order Items',

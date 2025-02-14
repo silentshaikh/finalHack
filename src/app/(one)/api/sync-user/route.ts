@@ -18,6 +18,7 @@ export async function POST(){
             userid:`${currUser.id.slice(0,6)}-${currUser.fullName}`,
             username:currUser.fullName,
             useremail:currUser.primaryEmailAddress?.emailAddress,
+            // orderhistory:[]
         });
     };
     return NextResponse.json({message:'User Synced Successfully'},{status:201})

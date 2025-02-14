@@ -16,15 +16,12 @@ export async function POST(req:NextRequest){
             return NextResponse.json({message:'No Orders have recieved'},{status:400})
         };
         //find that user to save the order data in the user history
-            // const findUser = `*[_type == "userlist" && userid == $userid][0]`;
-            // const ourUser = await client.fetch(findUser,{userid:currUser.id});
-             // Helper function to fetch and convert image to Buffer
-        // const fetchImageBuffer = async (imageUrl: string) => {
-        //     const response = await fetch(imageUrl);
-        //     const arrayBuffer = await response.arrayBuffer();
-        //     return Buffer.from(arrayBuffer);
-        // };
-
+            const findUser = `*[_type == "userlist" && username == $username][0]`;
+            const ourUser = await client.fetch(findUser,{username:currUser.fullName});
+            console.log(ourUser)
+            if(!ourUser){
+                throw new Error('User not Found')
+            }
             // Upload images and create the order
             const uploadImageToSanity = async (imageUrl:string) => {
                 try {
@@ -42,19 +39,6 @@ export async function POST(req:NextRequest){
               };
         const orderItemsWithImages = await Promise.all(addCartProd.map(async (item) => {
             const imageId = await uploadImageToSanity(item.productimage);
-
-            // if (item.productimage) {
-                // Check if it's a URL or file
-                // if (item.productimage.startsWith("http")) {
-                //     imageRef = item.productimage; // Store the URL directly
-                // }else{
-                      // Convert to Buffer and upload to Sanity
-                    //   const imageBuffer = await fetchImageBuffer(item.productimage);
-                    //   const uploadedImage = await client.assets.upload('image', imageBuffer);
-                    //   imageRef = uploadedImage._id; // Get the image reference ID
-                    // imageRef =  
-                // };
-            // };
             return {
                 productid: item.productid,
                 productname: item.productname,
@@ -69,16 +53,32 @@ export async function POST(req:NextRequest){
                 productimage:imageId ? { _type: "image", asset: { _ref: imageId } } : null,
             };
         }));
-            //send order on sanity studio
-             await client.create({
-                _type:'orderlist',
-                // user:{_type:'reference',_ref:ourUser.userid},
-                orderitems:orderItemsWithImages,
-            });
+
+        //check if user already has an order
+        const findOrder = `*[_type == "orderlist" && user._ref == $userId][0]`;
+        const orderExist = await client.fetch(findOrder,{userId:ourUser._id})
+        if(orderExist){
+            //if order exist update so the orderlist with new orders
+            await client.patch(orderExist._id)
+            .setIfMissing({orderitems:[]})
+            .append("orderitems",orderItemsWithImages)
+            .commit();
+        }else{
+           //send order on sanity studio
+         await client.create({
+            _type:'orderlist',
+            user:{_type:'reference',_ref:ourUser._id},
+            orderitems:orderItemsWithImages,
+        });  
+        // await client.patch(ourUser._id)
+        // .setIfMissing({orderhistory:[]})
+        // .append("orderhistory",[{_type:'reference', _ref: newOrder._id }])
+        // .commit()
+        };
+           
         return NextResponse.json({message:'Order Store Successfully'},{status:201})
     } catch (error) {
         console.log(error)
         return NextResponse.json({message:`Error when storing orders : ${error}`},{status:500})
-    }
-
+    };
 }
