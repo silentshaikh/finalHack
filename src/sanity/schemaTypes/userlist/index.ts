@@ -19,11 +19,11 @@ export const userList = {
             title:"User Email",
             type:'string',
         },
-        // {
-        //     name:'orderhistory',
-        //     title:'Order History',
-        //     type:'reference',
-        //     to:[{type:'orderlist'}]
-        // }
+        {
+            name:'orderhistory',
+            title:'Order History',
+            type:'reference',
+            to:[{type:'orderslist'}]
+        }
     ]
 };

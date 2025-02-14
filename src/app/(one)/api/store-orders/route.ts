@@ -55,25 +55,22 @@ export async function POST(req:NextRequest){
         }));
 
         //check if user already has an order
-        const findOrder = `*[_type == "orderlist" && user._ref == $userId][0]`;
+        const findOrder = `*[_type == "orderslist" && user._ref == $userId][0]`;
         const orderExist = await client.fetch(findOrder,{userId:ourUser._id})
         if(orderExist){
             //if order exist update so the orderlist with new orders
             await client.patch(orderExist._id)
             .setIfMissing({orderitems:[]})
-            .append("orderitems",orderItemsWithImages)
-            .commit();
+            .insert("after", "orderitems[-1]", orderItemsWithImages) // Add new items at the end
+        .commit();
+
         }else{
            //send order on sanity studio
          await client.create({
-            _type:'orderlist',
+            _type:'orderslist',
             user:{_type:'reference',_ref:ourUser._id},
             orderitems:orderItemsWithImages,
         });  
-        // await client.patch(ourUser._id)
-        // .setIfMissing({orderhistory:[]})
-        // .append("orderhistory",[{_type:'reference', _ref: newOrder._id }])
-        // .commit()
         };
            
         return NextResponse.json({message:'Order Store Successfully'},{status:201})

@@ -1,5 +1,5 @@
 export const orderList = {
-    name:'orderlist',
+    name:'orderslist',
     title:'Order List',
     type:'document',
     fields:[
