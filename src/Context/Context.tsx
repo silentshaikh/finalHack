@@ -345,8 +345,8 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
      } catch (error) {
       console.log(error)
      }
-      
       setReviewInp('');
+      toast('Review has added successfully');
     }
   }
    //PRODUCT INCREMENT AND DECREMENT
