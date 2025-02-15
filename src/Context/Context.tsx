@@ -247,7 +247,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
           headers: {
             "Content-Type": "application/json",
           },
-          cache:'force-cache'
+        
         });
         const getProd:Product[] = await fetchProd.json();
         console.log(getProd);
@@ -269,8 +269,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
           cartDispatch({type:CARTSETLIST,payload:backUp});
-       
- };
+};
  //CALL THE FUNCTION
  callFetchFunc();  
     },[page,BACKUP,limit,LOADPRODUCT]);
