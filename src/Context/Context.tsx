@@ -328,7 +328,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         toast('Please Log-in to add a review')
         return;
       };
-      setReviewList((prev) => [...prev,{reviewId:new Date().getTime(),userName,userReview:reviewInp}]);
+      // setReviewList((prev) => [...prev,{reviewId:new Date().getTime(),userName,userReview:reviewInp}]);
      try {
       const reviewPost = await fetch('/api/store-reviews',{
         method:'POST',
@@ -857,7 +857,8 @@ useEffect(() => {
              createdAt:findProdForWish.createdAt,
              updatedAt: findProdForWish.updatedAt,
              discount:findProdForWish.discount,
-             tags:findProdForWish.tags
+             tags:findProdForWish.tags,
+             reviewlist:findProdForWish.reviewlist,
            };
            //destructure the wish list object
            const {productname} = wishProduct;
@@ -901,7 +902,7 @@ useEffect(() => {
   const filtPopCategory = popularProd.filter((e) => e.id !== '18');
   console.log(filtPopCategory)
   return (
-    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert,onHandleReview,reviewInp,onFormReview,reviewList}}>{children}</EcomContext.Provider>
+    <EcomContext.Provider value={{navTogg,onHandleNav,productList,backupList,page,paginationOperate,uniqueTypes,onFilterForm,onHandleSelectBox,selectValue,filtPopCategory,handleSearchValue,searchValue,handleToggSearch,searchTogg,onHandleSearchForm,cartAlert,emptyAlert,cartData,onProdDec,onProdInc,setProdColor,setProdSize,addToCart,addProdDec,addProdInc,cartDeleteItem,clearCart,cartOperate,addWishList,colr,delWishList,onHandleCheckout,onProductDetail,onHandleShipmentForm,onHandleShipmentInp,shipmentInp,rateList,handleRate,rateId,onCreatingLabel,trackingObj,labelPdf,loading,shipError,onHandleTrack,onSubmitTracking,labelId,trackError,trackingData,signupAlert,onHandleReview,reviewInp,onFormReview}}>{children}</EcomContext.Provider>
   )
 }
 

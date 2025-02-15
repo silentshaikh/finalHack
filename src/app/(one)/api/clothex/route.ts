@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
         price,
         productsizes,
         productcolors,
+        reviewlist,
         tags,
         createdAt,
         updatedAt,

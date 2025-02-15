@@ -59,14 +59,14 @@ export interface ContextType{
     onHandleReview: (value:string) => void;
     reviewInp:string;
     onFormReview: (e:FormEvent<HTMLFormElement>,id:string) => void;
-    reviewList:ReviewList[];
+    // reviewList:ReviewList[];
 };
 
 //Review List
 export interface ReviewList{
-  reviewId:number;
-  userName:string;
-  userReview:string;
+  userreview:string;
+  review:string;
+  timing:string;
 }
 //Card Type for Cart Page
 export interface TypeForCartCard {
@@ -132,7 +132,7 @@ export interface Product {
     productcolors: string[]; // Available colors represented as hex codes
     updatedAt: string; // ISO string representing the last update date
     id: string; // Product ID
-    reviewlist?: string[]; // Array of reviews (currently empty in the example)
+    reviewlist: ReviewList[]; // Array of reviews (currently empty in the example)
     productQuantity:number;
 };
 
