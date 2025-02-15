@@ -273,7 +273,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
  };
  //CALL THE FUNCTION
  callFetchFunc();  
-    },[page,BACKUP,limit,LOADPRODUCT,backupList,productList]);
+    },[page,BACKUP,limit,LOADPRODUCT]);
       //DESTRUCTURE THE PAGINATION BUTTON VALUE
   const {first,one,next,three,two} = paginButton;
   // PERFORM PAGINATION
