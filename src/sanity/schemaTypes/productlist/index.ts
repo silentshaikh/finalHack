@@ -70,7 +70,23 @@ export const productList = {
             name:'reviewlist',
             title:'Review List',
             type:'array',
-            of:[{type:'string'}]
+            of:[{type:'object',fields:[
+                {
+                    name:'userreview',
+                    title:'User Review',
+                    type:'string'
+                },
+                {
+                    name:'review',
+                    title:'Review',
+                    type:'text'
+                },
+                {
+                    name:'timing',
+                    title:'Timing',
+                    type:'datetime',
+                }
+            ]}]
         },
         {
             name:'createdAt',

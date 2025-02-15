@@ -261,10 +261,10 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     useEffect(() => {
       const callFetchFunc = async ()=> {
         //FOR PRODUCT LIST SHOW
-        const prodList:Product[] = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
+        const prodList:Product[] = (await fetchProductList(`http://localhost:3000/api/clothex?limit=${limit}&page=${page}`)).map((e) => ({...e, productQuantity:1}));
         dispatch({type:LOADPRODUCT,payload:prodList});
         console.log(prodList)
-        const backUp = (await fetchProductList(`${process.env.NEXT_PUBLIC_FABRIC}/api/clothex`)).map((e) => ({...e, productQuantity:1}));
+        const backUp = (await fetchProductList(`http://localhost:3000/api/clothex`)).map((e) => ({...e, productQuantity:1}));
         console.log(backUp);
         dispatch({type:BACKUP,payload:backUp});
           //ADD CARTLIST TO PERFORM ADD TO CART
@@ -319,7 +319,7 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
     setReviewInp(value)
   }
   //Handle Form of Review
-  const onFormReview = (e:FormEvent<HTMLFormElement>) => {
+  const onFormReview =async (e:FormEvent<HTMLFormElement>,id:string) => {
     e.preventDefault();
     if(reviewInp.trim() === ''){
       toast('Please Fill that field')
@@ -328,7 +328,25 @@ const [rateList, setRatesList] = useState<Rate[]>([]);
         toast('Please Log-in to add a review')
         return;
       };
-      setReviewList((prev) => [...prev,{reviewId:new Date().getTime(),userName,userReview:reviewInp}])
+      setReviewList((prev) => [...prev,{reviewId:new Date().getTime(),userName,userReview:reviewInp}]);
+     try {
+      const reviewPost = await fetch('/api/store-reviews',{
+        method:'POST',
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          reviewInp,
+          userName
+        })
+      });
+      console.log(reviewPost)
+     } catch (error) {
+      console.log(error)
+     }
+      
+      setReviewInp('');
     }
   }
    //PRODUCT INCREMENT AND DECREMENT
