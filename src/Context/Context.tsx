@@ -1,6 +1,6 @@
 'use client';
 import { paginButton } from '@/utils/Helper/helper';
-import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate, ReviewList, ShipmentInpCheck,TrackingData, trackingObjType } from '@/utils/Type/type';
+import { Address, CartAction, CartDec, CartListType, ContextType, InitialCartData, InitialProdData, Product, ProductAction, Rate,  ShipmentInpCheck,TrackingData, trackingObjType } from '@/utils/Type/type';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { ChangeEvent, createContext, FormEvent, ReactNode, useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import Cookies from "js-cookie";
@@ -102,7 +102,7 @@ const [colr,setColr] = useState<boolean>(false);
 //HANDLE REVIEW INPUT
 const [reviewInp,setReviewInp] = useState<string>('');
 //REVIEW LIST OF EACH PRODUCT
-const [reviewList,setReviewList] = useState<ReviewList[]>([]);
+// const [reviewList,setReviewList] = useState<ReviewList[]>([]);
 //HANDLE SHIPMENT INPUT
 const [shipmentInp,setShipmentInp] = useState<Address>({
   name: "",
