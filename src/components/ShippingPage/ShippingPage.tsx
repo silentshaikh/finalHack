@@ -7,9 +7,10 @@ import LabelButton from '../LabelButton/LabelButton';
 import ShipLabelButton from '../ShipLabelButton/ShipLabelButton';
 import TrackingDetail from '../TrackingDetail/TrackingDetail';
 import { ToastContainer } from 'react-toastify';
+import ShipError from '../ShipError/ShipError';
 
 function ShippingPage() {
-  const {rateList,rateId,labelPdf,trackingObj} = useEcomHook();
+  const {rateList,rateId,labelPdf,trackingObj,shipError} = useEcomHook();
   return (
     <section className='flex flex-col items-center gap-8 py-10'>
       <h1 className={`${poppins.className} text-5xl max-[500px]:text-4xl max-[340px]:text-3xl`}>SHIPPING RATES</h1>
@@ -22,6 +23,9 @@ function ShippingPage() {
     }
     {
       labelPdf ? <ShipLabelButton/> : ""
+    }
+    {
+      shipError ? <ShipError/> : ""
     }
     {
       trackingObj ? <TrackingDetail/> : ''
